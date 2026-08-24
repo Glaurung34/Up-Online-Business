@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>«Стань предпринимателем» — кликабельный прототип</title>
+<style>
+  :root{
+    --bg-app:#F1F0F6;
+    --primary:#5B52E8;
+    --primary-grad: linear-gradient(135deg,#6E64FF,#4F45D8);
+    --text:#16161D;
+    --text-secondary:#8A8A99;
+    --border:#E7E6EF;
+    --success:#1FAA59;
+    --success-bg:#E7F8EE;
+    --warning:#B96B00;
+    --warning-bg:#FFF3E0;
+    --danger:#D93025;
+    --danger-bg:#FDECEA;
+    --chip-bg:#EEEDFB;
+    --tip-bg:#FFF8E1;
+    --tip-text:#8A6D00;
+    --tip-border:#F3E3A8;
+  }
+  *{box-sizing:border-box;}
+  html,body{height:100%;}
+  body{
+    margin:0;
+    background:radial-gradient(circle at 20% 0%, #f2f1f9, #dfdeec 70%);
+    font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;
+    color:var(--text);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:26px 16px 60px;
+  }
+  .page-header{max-width:640px;text-align:center;margin-bottom:18px;}
+  .page-header .eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);}
+  .page-header h1{font-size:21px;margin:6px 0 6px;}
+  .page-header p{font-size:12.5px;color:#5b5b66;line-height:1.5;margin:0;}
+
+  .toolbar{
+    width:100%;max-width:390px;
+    display:flex;align-items:center;justify-content:space-between;
+    background:#fff;border-radius:16px;padding:10px 14px;
+    box-shadow:0 6px 18px rgba(30,30,60,.08);
+    margin-bottom:16px;
+    gap:10px;
+  }
+  .toolbar .crumb{font-size:11.5px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .toolbar .crumb span{display:block;font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px;}
+  .toolbar .actions{display:flex;gap:8px;flex:0 0 auto;}
+  .tb-btn{
+    border:none;background:var(--chip-bg);color:var(--primary);font-size:11.5px;font-weight:700;
+    padding:8px 12px;border-radius:10px;cursor:pointer;white-space:nowrap;
+  }
+  .tb-btn:hover{background:#E1DEFB;}
+  .tb-btn:active{transform:scale(.96);}
+  .tb-btn.ghost2{background:#F1F0F6;color:var(--text);}
+
+  .device{
+    width:390px;
+    max-width:94vw;
+    background:var(--bg-app);
+    border-radius:44px;
+    overflow:hidden;
+    box-shadow:0 0 0 9px #101018, 0 26px 60px rgba(20,20,35,.35);
+    height:820px;
+    display:flex;
+    flex-direction:column;
+    position:relative;
+  }
+  .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:150px;height:26px;background:#101018;border-radius:0 0 18px 18px;z-index:20;}
+
+  .status-bar{display:flex;justify-content:space-between;align-items:center;padding:16px 24px 6px;font-size:14px;font-weight:700;color:var(--text);}
+  .status-icons{display:flex;align-items:center;gap:5px;}
+  .bars{display:flex;align-items:flex-end;gap:2px;height:10px;}
+  .bars i{display:block;width:3px;background:#161621;border-radius:1px;}
+  .bars i:nth-child(1){height:4px;} .bars i:nth-child(2){height:6px;} .bars i:nth-child(3){height:8px;} .bars i:nth-child(4){height:10px;}
+  .wifi{width:0;height:0;border-left:6.5px solid transparent;border-right:6.5px solid transparent;border-bottom:8px solid #161621;border-radius:2px;}
+  .battery{width:21px;height:11px;border:1.5px solid #161621;border-radius:3px;position:relative;padding:1.3px;}
+  .battery:after{content:'';position:absolute;right:-3.8px;top:2.8px;width:2px;height:4.4px;background:#161621;border-radius:1px;}
+  .battery-fill{background:#161621;height:100%;width:82%;border-radius:1px;}
+
+  .app-header{padding:4px 16px 8px;display:flex;align-items:center;gap:10px;}
+  .app-header .back{width:32px;height:32px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--text);box-shadow:0 1px 2px rgba(0,0,0,.06);flex:0 0 auto;cursor:pointer;user-select:none;}
+  .app-header .back.disabled{opacity:.25;pointer-events:none;}
+  .app-header .back:active{transform:scale(.92);}
+  .app-header .title{font-size:16.5px;font-weight:700;flex:1;text-align:center;margin-right:32px;}
+
+  .app-body{flex:1;overflow-y:auto;padding:2px 16px 16px;display:flex;flex-direction:column;gap:11px;
+    animation:fadeIn .22s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+  .app-body::-webkit-scrollbar{width:0;}
+  .app-footer{padding:10px 16px 22px;}
+
+  .btn-primary{width:100%;padding:15px;border-radius:16px;background:var(--primary-grad);color:#fff;font-weight:700;font-size:14.5px;text-align:center;border:none;cursor:pointer;transition:transform .1s;}
+  .btn-primary:active{transform:scale(.98);}
+  .btn-primary.off{opacity:.38;pointer-events:none;}
+  .btn-secondary{width:100%;padding:14px;border-radius:16px;background:#fff;color:var(--primary);font-weight:700;font-size:14px;text-align:center;border:1.5px solid var(--primary);margin-top:9px;cursor:pointer;}
+  .btn-secondary:active{transform:scale(.98);}
+  .btn-ghost{width:100%;background:transparent;color:var(--text-secondary);text-align:center;font-size:12.5px;padding:8px;font-weight:600;cursor:pointer;}
+  .btn-pair{display:flex;gap:9px;}
+  .btn-pair .btn-secondary{margin-top:0;}
+
+  .card{background:#fff;border-radius:17px;padding:15px;}
+  .card-select{background:#fff;border-radius:17px;padding:15px;border:1.5px solid var(--border);display:flex;gap:11px;align-items:flex-start;cursor:pointer;transition:.12s;}
+  .card-select:active{transform:scale(.985);}
+  .card-select.selected{border-color:var(--primary);background:#F5F4FF;}
+  .card-select .radio{width:19px;height:19px;border-radius:50%;border:2px solid var(--border);flex:0 0 auto;margin-top:1px;}
+  .card-select.selected .radio{border-color:var(--primary);background:radial-gradient(circle,var(--primary) 0 6px, transparent 7px);}
+  .card-select .t{font-size:14px;font-weight:700;margin-bottom:2px;}
+  .card-select .d{font-size:12px;color:var(--text-secondary);line-height:1.4;}
+
+  .field{background:#fff;border-radius:14px;padding:11px 14px;}
+  .field label{display:block;font-size:11.5px;color:var(--text-secondary);margin-bottom:3px;}
+  .field .value{font-size:14.5px;font-weight:600;color:var(--text);}
+  .field .value.muted{color:#B7B7C2;font-weight:500;}
+  .field.locked{background:#F5F5F9;}
+  .field-row{display:flex;align-items:center;justify-content:space-between;gap:8px;}
+  .pencil{font-size:12px;color:var(--text-secondary);}
+
+  .chip{display:inline-flex;align-items:center;gap:5px;background:var(--chip-bg);color:var(--primary);padding:6px 11px;border-radius:20px;font-size:12px;font-weight:700;}
+  .chip-row{display:flex;flex-wrap:wrap;gap:6px;}
+
+  .banner{display:flex;gap:8px;padding:12px 13px;border-radius:14px;font-size:12px;line-height:1.4;}
+  .banner .ic{flex:0 0 auto;}
+  .banner.info{background:#EEF1FF;color:#3B3F8F;}
+  .banner.success{background:var(--success-bg);color:#177A41;}
+  .banner.warning{background:var(--warning-bg);color:var(--warning);}
+  .banner.danger{background:var(--danger-bg);color:var(--danger);}
+
+  .tip-card{display:flex;gap:9px;padding:12px 13px;border-radius:14px;font-size:11.5px;line-height:1.45;background:var(--tip-bg);color:var(--tip-text);border:1px solid var(--tip-border);}
+  .tip-card .ic{flex:0 0 auto;font-size:14px;}
+  .tip-card b{color:#7A5E00;}
+
+  .doc-row{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:11px 13px;cursor:pointer;}
+  .doc-row:active{transform:scale(.985);}
+  .doc-row .icon{width:34px;height:34px;border-radius:10px;background:#EEF1FF;display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:15px;flex:0 0 auto;}
+  .doc-row .name{font-size:13px;font-weight:600;flex:1;}
+  .doc-row .sz{font-size:11px;color:var(--text-secondary);}
+  .doc-row .chev{color:#C6C6D1;}
+
+  .section-title{font-size:12px;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.03em;margin-top:2px;}
+
+  .center-block{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:11px;padding:10px 6px;}
+  .status-icon{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:28px;}
+  .status-icon.ok{background:var(--success-bg);color:var(--success);}
+  .status-icon.warn{background:var(--warning-bg);color:var(--warning);}
+  .status-icon.pending{background:var(--chip-bg);color:var(--primary);}
+  .center-title{font-size:17.5px;font-weight:700;}
+  .center-text{font-size:13px;color:var(--text-secondary);line-height:1.5;max-width:250px;}
+
+  .stepper{display:flex;flex-direction:column;gap:0;}
+  .stepper .st{display:flex;gap:10px;}
+  .stepper .line{display:flex;flex-direction:column;align-items:center;}
+  .stepper .dot{width:21px;height:21px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex:0 0 auto;}
+  .stepper .dot.done{background:var(--success);color:#fff;}
+  .stepper .dot.now{background:var(--primary);color:#fff;}
+  .stepper .dot.todo{background:#E7E6EF;color:#9797A5;}
+  .stepper .bar{width:2px;flex:1;background:#E7E6EF;min-height:16px;}
+  .stepper .bar.done{background:var(--success);}
+  .stepper .txt{padding-bottom:15px;padding-top:1px;}
+  .stepper .txt .tt{font-size:13px;font-weight:700;}
+  .stepper .txt .ts{font-size:11.5px;color:var(--text-secondary);}
+
+  .toggle-row{display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:14px;padding:13px 14px;cursor:pointer;}
+  .toggle-row:active{transform:scale(.985);}
+  .toggle-row .l{font-size:13px;font-weight:600;max-width:200px;line-height:1.35;}
+  .toggle{width:40px;height:23px;border-radius:20px;background:var(--border);position:relative;flex:0 0 auto;transition:.15s;}
+  .toggle.on{background:var(--primary);}
+  .toggle .knob{width:19px;height:19px;border-radius:50%;background:#fff;position:absolute;top:2px;left:2px;box-shadow:0 1px 2px rgba(0,0,0,.15);transition:.15s;}
+  .toggle.on .knob{left:19px;}
+
+  .bottom-nav{display:flex;justify-content:space-around;padding:9px 0 22px;background:#fff;border-top:1px solid var(--border);}
+  .bottom-nav .item{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;color:var(--text-secondary);}
+  .bottom-nav .item.active{color:var(--primary);font-weight:700;}
+  .nav-ic{font-size:17px;}
+
+  .link-card{background:#fff;border-radius:17px;padding:15px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+  .link-card:active{transform:scale(.985);}
+  .link-card .lg{width:40px;height:40px;border-radius:12px;background:var(--primary-grad);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;flex:0 0 auto;}
+  .link-card .t{font-size:13.5px;font-weight:700;}
+  .link-card .d{font-size:11.5px;color:var(--text-secondary);}
+
+  .hint{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--primary);font-weight:600;}
+  .demo-box{border:1.5px dashed #C9C6F0;border-radius:14px;padding:12px 13px;background:#FBFAFF;}
+  .demo-box .lab{font-size:10.5px;font-weight:700;color:#8A82D8;text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px;}
+
+  .num-list{display:flex;flex-direction:column;gap:8px;}
+  .num-list .ni{display:flex;gap:9px;align-items:flex-start;font-size:12px;line-height:1.5;color:#3f3f49;}
+  .num-list .nb{width:19px;height:19px;border-radius:50%;background:var(--chip-bg);color:var(--primary);font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;}
+
+  .checklist-row{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:15px;padding:13px 14px;}
+  .checklist-row.clickable{cursor:pointer;}
+  .checklist-row.clickable:active{transform:scale(.985);}
+  .checklist-row.disabled{opacity:.5;}
+  .cl-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 auto;margin-top:1px;}
+  .cl-icon.done{background:var(--success);color:#fff;}
+  .cl-icon.now{background:var(--primary);color:#fff;box-shadow:0 0 0 4px #EEEDFB;}
+  .cl-icon.todo{background:#E7E6EF;color:#9797A5;}
+  .cl-t{font-size:13.5px;font-weight:700;}
+  .cl-d{font-size:11.5px;color:var(--text-secondary);margin-top:2px;line-height:1.4;}
+  .cl-chip{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:8px;margin-top:6px;}
+  .cl-chip.now{background:var(--chip-bg);color:var(--primary);}
+
+  .foot-note{max-width:390px;text-align:center;font-size:11px;color:#8A8A99;margin-top:18px;line-height:1.6;}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="eyebrow">Стань предпринимателем · UP Online</div>
+  <h1>Кликабельный прототип альтернативного сценария</h1>
+  <p>Проходите путь клиента экран за экраном. Проверка уникальности названия ООО выполняется вручную на сайте ЕГР — в приложении такой API недоступен. На каждом шаге добавлены подсказки 💡. Полный чеклист этапов — кнопкой сверху.</p>
+</div>
+
+<div class="toolbar">
+  <div class="crumb"><span id="crumbStage">—</span><span id="crumbTitle" style="font-size:12.5px;color:#16161D;font-weight:700;text-transform:none;letter-spacing:0;">—</span></div>
+  <div class="actions">
+    <button class="tb-btn ghost2" onclick="app.openChecklist()">📋 Чеклист</button>
+    <button class="tb-btn" onclick="app.restart()">↺ Сначала</button>
+  </div>
+</div>
+
+<div class="device">
+  <div class="notch"></div>
+  <div class="status-bar">
+    <span>9:41</span>
+    <div class="status-icons"><div class="bars"><i></i><i></i><i></i><i></i></div><div class="wifi"></div><div class="battery"><div class="battery-fill"></div></div></div>
+  </div>
+  <div id="appHeader"></div>
+  <div id="appBody" class="app-body"></div>
+  <div id="appFooter" class="app-footer"></div>
+  <div id="bottomNav"></div>
+</div>
+
+<div class="foot-note">Прототип отражает шаги документа «Шаги альтернативного сценария текстом». Проверка названия и решение о регистрации — самоотчёт клиента: банк технически не может подтвердить эти действия сам.</div>
+
+<script>
+const state = {
+  entity: 'ip',       // 'ip' | 'ooo'
+  nameAttempts: 0,
+  sig: null,           // 'bank' | 'self'
+  docsChecked: false,
+  submitted: false,
+  companyName: 'ТехноСтарт'
+};
+let current = 's1';
+let hist = [];
+let progressRef = 's1';
+
+const MACRO = {
+  s1:1, s2:1, s3:1,
+  s4a:2, s5b:2, s5b_check:2, s5b_free:2, s5b_busy:2, s7b:2, s8b:2,
+  s9:3, s10a:3, s11:3,
+  s12:4, s13:4,
+  s14:5,
+  s15a:6, s15b:6, s15c:6,
+  s16:7
+};
+const MACRO_LABELS = [
+  {n:1, t:'Анкета', d:'Выбор формы бизнеса, данные профиля, коды ОКЭД'},
+  {n:2, t:'Название и документы', d:'ИП — автозаявление. ООО — название (проверка на сайте ЕГР вручную) и конструктор документов'},
+  {n:3, t:'Электронная подпись', d:'Заказ ЭЦП через банк или самостоятельно, получение ключа'},
+  {n:4, t:'Вычитка и подача', d:'Проверка документов, скачивание, самостоятельная подача в ЕГР'},
+  {n:5, t:'Ожидание регистрации', d:'ЕГР рассматривает документы'},
+  {n:6, t:'Результат регистрации', d:'Открытие счёта (ИП — автоматически, ООО — по обращению) или уточнение статуса'},
+  {n:7, t:'Переход в бизнес-интерфейс', d:'SSO-переход в бизнес-контур банка'},
+];
+
+function repScreen(macro){
+  switch(macro){
+    case 1: return 's1';
+    case 2: return state.entity==='ip' ? 's4a' : 's5b';
+    case 3: return 's9';
+    case 4: return 's12';
+    case 5: return 's14';
+    case 6: return state.entity==='ip' ? 's15a' : 's15b';
+    case 7: return 's16';
+  }
+}
+
+function go(id, opts){
+  opts = opts || {};
+  if(!opts.replace){ hist.push(current); }
+  if(id!=='checklist'){ progressRef = id; }
+  current = id;
+  render();
+}
+function back(){
+  if(hist.length===0) return;
+  current = hist.pop();
+  render();
+}
+function restart(){
+  state.entity='ip'; state.nameAttempts=0; state.sig=null; state.docsChecked=false; state.submitted=false;
+  hist=[]; current='s1'; progressRef='s1'; render();
+}
+function selectEntity(v){ state.entity=v; render(); }
+function selectSig(v){ state.sig=v; render(); }
+function toggle(key){ state[key]=!state[key]; render(); }
+function generateName(){
+  const opts=['ТехноСтарт','Альфа Солюшнс','ГринВей Групп','НоваЛинк'];
+  let i = opts.indexOf(state.companyName);
+  state.companyName = opts[(i+1)%opts.length];
+  render();
+}
+function openEgrSite(){
+  alert('В реальном приложении откроется официальный сайт ЕГР (egr.gov.by) в новой вкладке или встроенном браузере — проверка выполняется на стороне ЕГР, банк не имеет к ней прямого API-доступа.');
+}
+function markNameFree(){ go('s5b_free'); }
+function markNameBusy(){ state.nameAttempts++; go('s5b_busy'); }
+function openChecklist(){ go('checklist'); }
+
+const app = {go, back, restart, selectEntity, selectSig, toggle, generateName, checkName:null, openEgrSite, markNameFree, markNameBusy, openChecklist};
+
+function tip(html){
+  return `<div class="tip-card"><span class="ic">💡</span><div>${html}</div></div>`;
+}
+
+const SCREENS = {
+
+  s1: ()=>({
+    stage:'Этап 1', title:'Стань предпринимателем', back:false,
+    body:`
+      <div class="banner info"><span class="ic">ⓘ</span>Зарегистрируйте бизнес и откройте счёт, не выходя из приложения</div>
+      <div class="section-title">Выберите форму бизнеса</div>
+      <div class="card-select ${state.entity==='ip'?'selected':''}" onclick="app.selectEntity('ip')">
+        <div class="radio"></div>
+        <div><div class="t">Индивидуальный предприниматель (ИП)</div><div class="d">Проще всего: без учредительных документов, заявление формируется автоматически</div></div>
+      </div>
+      <div class="card-select ${state.entity==='ooo'?'selected':''}" onclick="app.selectEntity('ooo')">
+        <div class="radio"></div>
+        <div><div class="t">Общество с ограниченной ответственностью (ООО)</div><div class="d">Потребуется название компании и пакет учредительных документов</div></div>
+      </div>
+      <div class="hint">💬 Не знаете, что выбрать? Сравнить формы</div>
+      ${tip('<b>Совет:</b> ИП оформляется быстрее и дешевле, но предприниматель отвечает по обязательствам всем своим имуществом. ООО ограничивает ответственность размером уставного капитала.')}
+    `,
+    footer:`<div class="btn-primary" onclick="app.go('s2')">Продолжить</div>`
+  }),
+
+  s2: ()=>({
+    stage:'Этап 1', title:'Анкета',
+    body:`
+      <div class="banner success"><span class="ic">✓</span>Мы предзаполнили анкету данными из вашего профиля</div>
+      <div class="section-title">Личные данные</div>
+      <div class="field locked"><div class="field-row"><div><label>ФИО</label><div class="value">Иванова Мария Сергеевна</div></div><span class="pencil">✎</span></div></div>
+      <div class="field locked"><div class="field-row"><div><label>Дата рождения</label><div class="value">14.03.1990</div></div><span class="pencil">✎</span></div></div>
+      <div class="field locked"><div class="field-row"><div><label>Паспортные данные</label><div class="value">MP 2345678</div></div><span class="pencil">✎</span></div></div>
+      <div class="section-title">Контакты</div>
+      <div class="field"><label>Адрес регистрации</label><div class="value">г. Минск, ул. Немига, 5</div></div>
+      <div class="hint">💬 Зачем нужны эти данные?</div>
+      ${tip('<b>Совет:</b> сверьте паспортные данные с оригиналом документа — расхождения могут задержать регистрацию в ЕГР.')}
+    `,
+    footer:`<div class="btn-primary" onclick="app.go('s3')">Продолжить</div>`
+  }),
+
+  s3: ()=>({
+    stage:'Этап 1', title:'Виды деятельности',
+    body:`
+      <div class="field"><label>Поиск кода ОКЭД</label><div class="value">разработка ПО</div></div>
+      <div class="section-title">Выбрано</div>
+      <div class="chip-row"><div class="chip">62.01 — разработка ПО ✕</div><div class="chip">62.02 — консультации ✕</div></div>
+      <div class="card"><div class="hint" style="margin-bottom:6px;">ⓘ Что такое ОКЭД?</div><div style="font-size:12px;color:#6b6b78;line-height:1.5;">Классификатор видов экономической деятельности. Укажите все виды, которыми планируете заниматься.</div></div>
+      <div class="card"><div class="hint" style="margin-bottom:6px;">💬 Пример заполнения</div><div style="font-size:12px;color:#6b6b78;line-height:1.5;">Посмотреть, какие коды обычно выбирают для похожего бизнеса</div></div>
+      ${tip('<b>Совет:</b> выбирайте только те коды, которыми планируете заниматься в ближайший год — добавить новые можно будет позже через бизнес-профиль.')}
+    `,
+    footer:`<div class="btn-primary" onclick="app.go(state.entity==='ip' ? 's4a' : 's5b')">Продолжить</div>`
+  }),
+
+  s4a: ()=>({
+    stage:'Этап 2 · ИП', title:'Заявление ИП',
+    body:`
+      <div class="center-block" style="padding-top:14px;">
+        <div class="status-icon ok">✓</div>
+        <div class="center-title">Заявление сформировано</div>
+        <div class="center-text">Название юрлица и конструктор документов для ИП не требуются — заявление подготовлено автоматически на основании анкеты</div>
+      </div>
+      <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Заявление о регистрации ИП</div><div class="sz">PDF · сформировано только что</div></div><div class="chev">›</div></div>
+      ${tip('<b>Совет:</b> внимательно проверьте адрес регистрации в заявлении — именно на него ЕГР направит уведомление о результате.')}
+    `,
+    footer:`<div class="btn-primary" onclick="app.go('s9')">Перейти к электронной подписи</div>`
+  }),
+
+  s5b: ()=>({
+    stage:'Этап 2 · ООО', title:'Название компании',
+    body:`
+      <div class="banner warning"><span class="ic">⚠</span>Автоматическая проверка через ЕГР приложению недоступна — уникальность нужно проверить вручную на сайте ЕГР</div>
+      <div class="field"><label>Название ООО</label><div class="value">${state.companyName}</div></div>
+      <div class="btn-secondary" style="margin-top:0;" onclick="app.generateName()">✨ Сгенерировать вариант названия</div>
+      <div class="card"><div class="hint" style="margin-bottom:6px;">ⓘ Требования к наименованию</div><div style="font-size:12px;color:#6b6b78;line-height:1.5;">Название не должно совпадать с уже зарегистрированными и содержать запрещённые слова.</div></div>
+      ${state.nameAttempts>0? `<div class="banner danger"><span class="ic">✕</span>Предыдущий вариант оказался занят (попыток: ${state.nameAttempts}). Измените название или сгенерируйте новое и проверьте снова.</div>`:''}
+      ${tip('<b>Совет:</b> вариант можно сгенерировать в приложении, но занятость обязательно проверьте сами на сайте ЕГР — банк не имеет доступа к этой проверке через API.')}
+    `,
+    footer:`<div class="btn-primary" onclick="app.go('s5b_check')">Далее: проверить на сайте ЕГР</div>`
+  }),
+
+  s5b_check: ()=>({
+    stage:'Этап 2 · ООО', title:'Проверка на сайте ЕГР',
+    body:`
+      <div class="banner warning"><span class="ic">⚠</span>У банка нет прямого доступа к API ЕГР для автоматической проверки. Проверьте название самостоятельно на официальном сайте регистра</div>
+      <div class="link-card" onclick="app.openEgrSite()"><div class="lg">↗</div><div><div class="t">Открыть сайт ЕГР</div><div class="d">egr.gov.by · проверка наименований</div></div></div>
+      <div class="section-title">Как проверить</div>
+      <div class="num-list">
+        <div class="ni"><div class="nb">1</div>Введите «${state.companyName}» в поиск на сайте ЕГР</div>
+        <div class="ni"><div class="nb">2</div>Проверьте, нет ли точных или похожих совпадений</div>
+        <div class="ni"><div class="nb">3</div>Вернитесь в приложение и укажите результат ниже</div>
+      </div>
+      <div class="section-title">Результат проверки</div>
+      ${tip('<b>Совет:</b> используйте на сайте ЕГР точную форму названия, включая организационно-правовую форму — «ООО» и без неё могут дать разные результаты поиска.')}
+    `,
+    footer:`
+      <div class="btn-pair">
+        <div class="btn-secondary" style="border-color:#1FAA59;color:#1FAA59;" onclick="app.markNameFree()">✅ Свободно</div>
+        <div class="btn-secondary" style="border-color:#D93025;color:#D93025;" onclick="app.markNameBusy()">❌ Занято</div>
+      </div>`
+  }),
+
+  s5b_free: ()=>({
+    stage:'Этап 2 · ООО', title:'Проверка названия',
+    body:`
+      <div class="center-block" style="padding-top:20px;">
+        <div class="status-icon ok">✓</div>
+        <div class="center-title">Отмечено: «${state.companyName}» свободно</div>
+        <div class="center-text">Вы подтвердили, что проверили название на сайте ЕГР и совпадений не найдено</div>
+      </div>
+      <div class="banner info"><span class="ic">ⓘ</span>Это самоотчёт — банк не может перепроверить результат автоматически</div>
+      ${tip('<b>Совет:</b> сохраните проверенное название — при заполнении устава оно должно совпадать посимвольно, включая форму «ООО».')}
+    `,
+    footer:`<div class="btn-primary" onclick="app.go('s7b')">Продолжить к документам</div>`
+  }),
+
+  s5b_busy: ()=>({
+    stage:'Этап 2 · ООО', title:'Проверка названия',
+    body:`
+      <div class="center-block" style="padding-top:20px;">
+        <div class="status-icon warn">!</div>
+        <div class="center-title">Отмечено: название занято</div>
+        <div class="center-text">Вы указали, что на сайте ЕГР нашлось совпадение. Измените название или сгенерируйте новый вариант и проверьте его снова</div>
+      </div>
+      ${tip('<b>Совет:</b> попробуйте добавить уточняющее слово или регион к названию — это часто помогает быстро найти свободный вариант.')}
+    `,
+    footer:`
+      <div class="btn-primary" onclick="app.go('s5b')">Изменить название</div>
+      <div class="btn-secondary" onclick="app.generateName(); app.go('s5b')">✨ Сгенерировать другой вариант</div>
+    `
+  }),
+
+  s7b: ()=>({
+    stage:'Этап 2 · ООО', title:'Конструктор документов',
+    body:`
+      <div class="banner info"><span class="ic">ⓘ</span>Заполните разделы — мы соберём устав и пакет документов автоматически</div>
+      <div class="doc-row"><div class="icon">👥</div><div style="flex:1"><div class="name">Участники и доли</div><div class="sz">заполнено</div></div><div class="chev">✓</div></div>
+      <div class="doc-row"><div class="icon">🏢</div><div style="flex:1"><div class="name">Юридический адрес</div><div class="sz">заполнено</div></div><div class="chev">✓</div></div>
+      <div class="doc-row"><div class="icon">🧑‍💼</div><div style="flex:1"><div class="name">Данные директора</div><div class="sz">заполнено</div></div><div class="chev">✓</div></div>
+      <div class="doc-row"><div class="icon">💰</div><div style="flex:1"><div class="name">Уставный капитал</div><div class="sz">заполнено</div></div><div class="chev">✓</div></div>
+      <div class="doc-row"><div class="icon">⚙️</div><div style="flex:1"><div class="name">Вид деятельности</div><div class="sz">заполнено</div></div><div class="chev">✓</div></div>
+      <div class="hint">ⓘ Подсказки по каждому полю доступны по значку рядом</div>
+      ${tip('<b>Совет:</b> уставный капитал можно внести не только деньгами, но и имуществом — уточните детали в разделе «Уставный капитал».')}
+    `,
+    footer:`<div class="btn-primary" onclick="app.go('s8b')">Сформировать пакет документов</div>`
+  }),
+
+  s8b: ()=>({
+    stage:'Этап 2 · ООО', title:'Пакет документов готов',
+    body:`
+      <div class="banner success"><span class="ic">✓</span>Документы сформированы на основании данных конструктора</div>
+      <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Устав</div><div class="sz">PDF</div></div><div class="chev">›</div></div>
+      <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Решение учредителей о назначении директора</div><div class="sz">PDF</div></div><div class="chev">›</div></div>
+      <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Приказ о назначении директора</div><div class="sz">PDF</div></div><div class="chev">›</div></div>
+      <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Договор (контракт) с директором</div><div class="sz">PDF</div></div><div class="chev">›</div></div>
+      <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Учётная политика</div><div class="sz">PDF</div></div><div class="chev">›</div></div>
+      ${tip('<b>Совет:</b> дайте документы на проверку юристу или бухгалтеру перед подачей, особенно устав и порядок распределения долей.')}
+    `,
+    footer:`<div class="btn-primary" onclick="app.go('s9')">Продолжить</div>`
+  }),
+
+  s9: ()=>({
+    stage:'Этап 3', title:'Электронная подпись',
+    body:`
+      <div class="banner info"><span class="ic">ⓘ</span>Для подачи документов в ЕГР потребуется электронная цифровая подпись</div>
+      <div class="card-select ${state.sig==='bank'?'selected':''}" onclick="app.selectSig('bank')">
+        <div class="radio"></div>
+        <div><div class="t">Заказать ЭЦП через банк</div><div class="d">Банк — аккредитованный регистрационный центр. Получение ключа — очно в точке РЦ</div></div>
+      </div>
+      <div class="card-select ${state.sig==='self'?'selected':''}" onclick="app.selectSig('self')">
+        <div class="radio"></div>
+        <div><div class="t">У меня уже есть ЭЦП / оформлю сам</div><div class="d">Действуете самостоятельно, без участия банка в оформлении подписи</div></div>
+      </div>
+      ${!state.sig? `<div class="hint">👆 Выберите один из вариантов</div>`:''}
+      ${tip('<b>Совет:</b> оформление через банк обычно быстрее по очереди в РЦ, но личный визит требуется в любом случае — это общее требование законодательства, а не банка.')}
+    `,
+    footer:`<div class="btn-primary ${!state.sig?'off':''}" onclick="app.go(state.sig==='bank' ? 's10a' : 's12')">Продолжить</div>`
+  }),
+
+  s10a: ()=>({
+    stage:'Этап 3 · Вариант А', title:'Заявка на ЭЦП',
+    body:`
+      <div class="banner success"><span class="ic">✓</span>Заявка передана в регистрационный центр банка вместе с пакетом документов</div>
+      <div class="stepper">
+        <div class="st"><div class="line"><div class="dot done">✓</div><div class="bar done"></div></div><div class="txt"><div class="tt">Заявка отправлена</div><div class="ts">Данные клиента и документы переданы в РЦ</div></div></div>
+        <div class="st"><div class="line"><div class="dot now">2</div><div class="bar"></div></div><div class="txt"><div class="tt">Посетите точку РЦ банка</div><div class="ts">пр-т Независимости, 34 · выбрать другую точку</div></div></div>
+        <div class="st"><div class="line"><div class="dot todo">3</div></div><div class="txt"><div class="tt">Подтвердите личность и получите ключ ЭЦП</div><div class="ts">Очно, по паспорту</div></div></div>
+      </div>
+      <div class="banner warning"><span class="ic">⚠</span>Сертификат издаёт РЦ ГосСУОК/НЦЭУ. Банк выступает только точкой обслуживания</div>
+      ${tip('<b>Совет:</b> возьмите с собой паспорт и, если документы подаёт представитель, — нотариально заверенную доверенность.')}
+    `,
+    footer:`<div class="btn-secondary" style="margin-top:0;" onclick="app.go('s11')">Отметить: ЭЦП получена</div>`
+  }),
+
+  s11: ()=>({
+    stage:'Этап 3 · Вариант А', title:'Электронная подпись',
+    body:`
+      <div class="center-block" style="padding-top:10px;">
+        <div class="status-icon ok">✓</div>
+        <div class="center-title">ЭЦП получена</div>
+        <div class="center-text">Отлично! Теперь вы можете подписать документы электронно при самостоятельной подаче в ЕГР</div>
+      </div>
+      <div class="toggle-row"><div class="l">Я получил(а) ключ ЭЦП в точке РЦ банка</div><div class="toggle on"><div class="knob"></div></div></div>
+      ${tip('<b>Совет:</b> храните ключ ЭЦП в надёжном месте — банк не сможет восстановить его при утере, повторное получение потребует нового визита в РЦ.')}
+    `,
+    footer:`<div class="btn-primary" onclick="app.go('s12')">Продолжить к подаче документов</div>`
+  }),
+
+  s12: ()=>({
+    stage:'Этап 4', title:'Вычитка документов',
+    body:`
+      <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">${state.entity==='ip'?'Заявление о регистрации ИП':'Устав и пакет документов'}</div><div class="sz">Открыть для проверки</div></div><div class="chev">›</div></div>
+      ${state.entity==='ooo' ? `
+      <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Решение учредителей</div><div class="sz">Открыть для проверки</div></div><div class="chev">›</div></div>
+      <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Приказ о назначении директора</div><div class="sz">Открыть для проверки</div></div><div class="chev">›</div></div>` : ``}
+      <div class="toggle-row" onclick="app.toggle('docsChecked')"><div class="l">Я проверил(а) все документы — данные верны</div><div class="toggle ${state.docsChecked?'on':''}"><div class="knob"></div></div></div>
+      ${!state.docsChecked? `<div class="hint">👆 Отметьте, что документы проверены</div>`:''}
+      ${tip('<b>Совет:</b> обратите особое внимание на паспортные данные учредителей и размер долей — это самые частые причины отказа в регистрации.')}
+    `,
+    footer:`<div class="btn-primary ${!state.docsChecked?'off':''}" onclick="app.go('s13')">Скачать пакет документов</div>`
+  }),
+
+  s13: ()=>({
+    stage:'Этап 4', title:'Подача документов',
+    body:`
+      <div class="banner success"><span class="ic">✓</span>Пакет документов скачан на устройство</div>
+      <div class="card">
+        <div class="section-title" style="margin-top:0;">Дальше — вне приложения</div>
+        <div style="font-size:12px;color:#6b6b78;line-height:1.6;margin-top:6px;">Подайте документы на регистрацию в ЕГР самостоятельно — очно в регистрирующем органе или электронно, подписав полученной ЭЦП.</div>
+      </div>
+      <div class="toggle-row" onclick="app.toggle('submitted')"><div class="l">Я подал(а) документы на регистрацию</div><div class="toggle ${state.submitted?'on':''}"><div class="knob"></div></div></div>
+      <div class="banner warning"><span class="ic">⚠</span>Банк не может технически подтвердить факт подачи и её корректность — это самоотчёт клиента</div>
+      ${tip('<b>Совет:</b> сохраните подтверждение подачи (расписку или электронную квитанцию ЕГР) — оно пригодится, если потребуется уточнить статус.')}
+    `,
+    footer:`<div class="btn-primary ${!state.submitted?'off':''}" onclick="app.go('s14')">Подтвердить подачу</div>`
+  }),
+
+  s14: ()=>({
+    stage:'Этап 4→5', title:'Статус заявки',
+    body:`
+      <div class="stepper">
+        <div class="st"><div class="line"><div class="dot done">✓</div><div class="bar done"></div></div><div class="txt"><div class="tt">Анкета и документы</div><div class="ts">готово</div></div></div>
+        <div class="st"><div class="line"><div class="dot done">✓</div><div class="bar done"></div></div><div class="txt"><div class="tt">ЭЦП</div><div class="ts">${state.sig==='bank'?'получена через банк':'оформлена самостоятельно'}</div></div></div>
+        <div class="st"><div class="line"><div class="dot done">✓</div><div class="bar done"></div></div><div class="txt"><div class="tt">Подача в ЕГР</div><div class="ts">отмечена клиентом</div></div></div>
+        <div class="st"><div class="line"><div class="dot now">⏳</div><div class="bar"></div></div><div class="txt"><div class="tt">Ожидание регистрации</div><div class="ts">ЕГР рассматривает документы</div></div></div>
+        <div class="st"><div class="line"><div class="dot todo">5</div></div><div class="txt"><div class="tt">Регистрация и счёт</div><div class="ts">ожидает результата</div></div></div>
+      </div>
+      <div class="banner info"><span class="ic">ⓘ</span>Мы уведомим вас, как только появится результат из ЕГР</div>
+      ${tip('<b>Совет:</b> срок рассмотрения обычно не превышает нескольких рабочих дней, но может увеличиться при необходимости уточнений со стороны ЕГР.')}
+      <div class="demo-box">
+        <div class="lab">Демо · ответ поступает от ЕГР</div>
+        <div class="btn-pair">
+          <div class="btn-secondary" onclick="app.go(state.entity==='ip' ? 's15a' : 's15b')">✅ Одобрено</div>
+          <div class="btn-secondary" onclick="app.go('s15c')">❓ Не поступило</div>
+        </div>
+      </div>
+    `,
+    footer:`<div class="btn-ghost" onclick="alert('Открыт бы чат поддержки')">Написать в чат поддержки</div>`
+  }),
+
+  s15a: ()=>({
+    stage:'Этап 5 · ИП', title:'Регистрация завершена',
+    body:`
+      <div class="center-block" style="padding-top:6px;">
+        <div class="status-icon ok">🎉</div>
+        <div class="center-title">ИП зарегистрировано!</div>
+        <div class="center-text">Сведения о регистрации получены из ЕГР. Расчётный счёт открыт автоматически</div>
+      </div>
+      <div class="card">
+        <div class="section-title" style="margin-top:0;">Расчётный счёт</div>
+        <div class="value" style="font-size:16px;font-weight:700;margin-top:4px;">BY00 UP24 0000 0000 0001</div>
+        <div class="sz" style="color:#8A8A99;font-size:11.5px;margin-top:2px;">Открыт в АБС после проверки УОС (идентификация, ПОД/ФТ)</div>
+      </div>
+      ${tip('<b>Совет:</b> подключите SMS- или push-уведомления по счёту — это поможет не пропустить первые операции и настройки безопасности.')}
+    `,
+    footer:`<div class="btn-primary" onclick="app.go('s16')">Перейти в бизнес-интерфейс</div>`
+  }),
+
+  s15b: ()=>({
+    stage:'Этап 5 · ООО', title:'Регистрация завершена',
+    body:`
+      <div class="center-block" style="padding-top:6px;">
+        <div class="status-icon ok">🎉</div>
+        <div class="center-title">ООО зарегистрировано!</div>
+        <div class="center-text">Сведения о регистрации получены из ЕГР</div>
+      </div>
+      <div class="banner warning"><span class="ic">⚠</span>Автоматическое открытие счёта для ООО недоступно — потребуется отдельное обращение</div>
+      <div class="link-card"><div class="lg">i</div><div><div class="t">Как открыть расчётный счёт</div><div class="d">Пошаговая инструкция и запись в отделение</div></div></div>
+      ${tip('<b>Совет:</b> запишитесь в отделение заранее — так вы быстрее откроете расчётный счёт и получите доступ к бизнес-интерфейсу.')}
+    `,
+    footer:`<div class="btn-primary" onclick="app.go('s16')">Перейти в бизнес-интерфейс</div>`
+  }),
+
+  s15c: ()=>({
+    stage:'Этап 5', title:'Статус заявки',
+    body:`
+      <div class="center-block" style="padding-top:6px;">
+        <div class="status-icon warn">?</div>
+        <div class="center-title">Сведения ещё не поступили</div>
+        <div class="center-text">Официальное уведомление от ЕГР пока не пришло в банк. Уточните статус регистрации самостоятельно</div>
+      </div>
+      <div class="doc-row" onclick="app.go('s14')"><div class="icon">🔄</div><div style="flex:1"><div class="name">Проверить статус в ЕГР</div><div class="sz">фоновая проверка через справочный API</div></div><div class="chev">›</div></div>
+      ${tip('<b>Совет:</b> если сведения не появляются больше 10 рабочих дней, стоит уточнить статус напрямую в регистрирующем органе.')}
+    `,
+    footer:`
+      <div class="btn-primary" onclick="app.go('s14')">Проверить снова</div>
+      <div class="btn-ghost" onclick="alert('Открыт бы чат поддержки')">Написать в чат поддержки</div>
+    `
+  }),
+
+  s16: ()=>({
+    stage:'Этап 6', title:'', nav:true, noHeaderTitle:true,
+    body:`
+      <div class="center-block">
+        <div class="status-icon pending">⇄</div>
+        <div class="center-title">Переходим в бизнес-профиль</div>
+        <div class="center-text">Выполняется переход по SSO между розничным и бизнес-контуром банка</div>
+      </div>
+      ${tip('<b>Совет:</b> в бизнес-интерфейсе доступны отдельные настройки доступа — при необходимости добавьте сотрудников с ограниченными правами.')}
+    `,
+    footer:`<div class="btn-secondary" style="margin-top:0;" onclick="app.restart()">↺ Пройти путь заново</div>`
+  }),
+
+  checklist: ()=>{
+    const curMacro = MACRO[progressRef] || 1;
+    const rows = MACRO_LABELS.map(m=>{
+      const st = m.n < curMacro ? 'done' : (m.n===curMacro ? 'now' : 'todo');
+      const clickable = m.n <= curMacro;
+      const iconTxt = st==='done' ? '✓' : String(m.n);
+      return `<div class="checklist-row ${clickable?'clickable':'disabled'}" ${clickable?`onclick="app.go('${repScreen(m.n)}')"`:''}>
+        <div class="cl-icon ${st}">${iconTxt}</div>
+        <div>
+          <div class="cl-t">${m.t}</div>
+          <div class="cl-d">${m.d}</div>
+          ${st==='now'?'<span class="cl-chip now">Сейчас здесь</span>':''}
+        </div>
+      </div>`;
+    }).join('');
+    return {
+      stage:'Обзор', title:'Чеклист регистрации',
+      body:`
+        <div class="chip-row">
+          <div class="chip">${state.entity==='ip'?'Форма: ИП':'Форма: ООО'}</div>
+          ${state.sig? `<div class="chip">${state.sig==='bank'?'ЭЦП: через банк':'ЭЦП: самостоятельно'}</div>`:''}
+        </div>
+        ${rows}
+        ${tip('Пройденные и текущий этап доступны для перехода нажатием. Следующие этапы откроются по мере прохождения пути.')}
+      `,
+      footer:`<div class="btn-secondary" style="margin-top:0;" onclick="app.back()">Закрыть</div>`
+    };
+  },
+};
+
+function render(){
+  const s = SCREENS[current]();
+  document.getElementById('crumbStage').textContent = s.stage;
+  document.getElementById('crumbTitle').textContent = s.title || 'Бизнес-интерфейс';
+
+  const headerEl = document.getElementById('appHeader');
+  if(s.title !== undefined && !s.noHeaderTitle){
+    headerEl.innerHTML = `
+      <div class="app-header">
+        <div class="back ${hist.length===0?'disabled':''}" onclick="app.back()">←</div>
+        <div class="title">${s.title}</div>
+      </div>`;
+  } else if(s.noHeaderTitle){
+    headerEl.innerHTML = `<div class="app-header"><div class="back" onclick="app.back()">←</div><div class="title"></div></div>`;
+  } else {
+    headerEl.innerHTML = '';
+  }
+
+  document.getElementById('appBody').innerHTML = s.body;
+  document.getElementById('appFooter').innerHTML = s.footer || '';
+
+  const navEl = document.getElementById('bottomNav');
+  if(s.nav){
+    navEl.innerHTML = `
+      <div class="bottom-nav">
+        <div class="item active"><span class="nav-ic">🏠</span>Главная</div>
+        <div class="item"><span class="nav-ic">💳</span>Платежи</div>
+        <div class="item"><span class="nav-ic">🕐</span>История</div>
+        <div class="item"><span class="nav-ic">💬</span>Чат</div>
+        <div class="item"><span class="nav-ic">•••</span>Ещё</div>
+      </div>`;
+  } else {
+    navEl.innerHTML = '';
+  }
+}
+
+render();
+</script>
+</body>
+</html>

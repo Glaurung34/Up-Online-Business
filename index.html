@@ -18,6 +18,9 @@
     --danger:#D93025;
     --danger-bg:#FDECEA;
     --chip-bg:#EEEDFB;
+    --tip-bg:#FFF8E1;
+    --tip-text:#8A6D00;
+    --tip-border:#F3E3A8;
   }
   *{box-sizing:border-box;}
   html,body{height:100%;}
@@ -26,24 +29,28 @@
     background:radial-gradient(circle at 20% 0%, #f2f1f9, #dfdeec 70%);
     font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,Arial,sans-serif;
     color:var(--text);
-    min-height:100vh;
+    height:100vh;
+    overflow:hidden;
     display:flex;
     flex-direction:column;
     align-items:center;
-    padding:26px 16px 60px;
+    justify-content:flex-start;
+    padding:10px 16px 8px;
+    box-sizing:border-box;
   }
-  .page-header{max-width:640px;text-align:center;margin-bottom:18px;}
-  .page-header .eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);}
-  .page-header h1{font-size:21px;margin:6px 0 6px;}
-  .page-header p{font-size:12.5px;color:#5b5b66;line-height:1.5;margin:0;}
+  .page-header{max-width:640px;text-align:center;margin-bottom:8px;flex:0 0 auto;}
+  .page-header .eyebrow{font-size:10.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--primary);}
+  .page-header h1{font-size:16px;margin:3px 0 3px;}
+  .page-header p{font-size:11px;color:#5b5b66;line-height:1.4;margin:0;}
 
   .toolbar{
     width:100%;max-width:390px;
     display:flex;align-items:center;justify-content:space-between;
-    background:#fff;border-radius:16px;padding:10px 14px;
+    background:#fff;border-radius:14px;padding:7px 12px;
     box-shadow:0 6px 18px rgba(30,30,60,.08);
-    margin-bottom:16px;
+    margin-bottom:8px;
     gap:10px;
+    flex:0 0 auto;
   }
   .toolbar .crumb{font-size:11.5px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .toolbar .crumb span{display:block;font-size:10px;font-weight:600;color:var(--text-secondary);text-transform:uppercase;letter-spacing:.03em;margin-bottom:2px;}
@@ -54,18 +61,30 @@
   }
   .tb-btn:hover{background:#E1DEFB;}
   .tb-btn:active{transform:scale(.96);}
+  .tb-btn.ghost2{background:#F1F0F6;color:var(--text);}
 
+  .device-wrap{
+    flex:1 1 auto;
+    min-height:0;
+    min-width:0;
+    width:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+  }
   .device{
     width:390px;
-    max-width:94vw;
     background:var(--bg-app);
     border-radius:44px;
     overflow:hidden;
     box-shadow:0 0 0 9px #101018, 0 26px 60px rgba(20,20,35,.35);
-    height:800px;
+    height:820px;
     display:flex;
     flex-direction:column;
     position:relative;
+    flex:0 0 auto;
+    transform-origin:center center;
   }
   .notch{position:absolute;top:0;left:50%;transform:translateX(-50%);width:150px;height:26px;background:#101018;border-radius:0 0 18px 18px;z-index:20;}
 
@@ -127,6 +146,10 @@
   .banner.warning{background:var(--warning-bg);color:var(--warning);}
   .banner.danger{background:var(--danger-bg);color:var(--danger);}
 
+  .tip-card{display:flex;gap:9px;padding:12px 13px;border-radius:14px;font-size:11.5px;line-height:1.45;background:var(--tip-bg);color:var(--tip-text);border:1px solid var(--tip-border);}
+  .tip-card .ic{flex:0 0 auto;font-size:14px;}
+  .tip-card b{color:#7A5E00;}
+
   .doc-row{display:flex;align-items:center;gap:10px;background:#fff;border-radius:14px;padding:11px 13px;cursor:pointer;}
   .doc-row:active{transform:scale(.985);}
   .doc-row .icon{width:34px;height:34px;border-radius:10px;background:#EEF1FF;display:flex;align-items:center;justify-content:center;color:var(--primary);font-size:15px;flex:0 0 auto;}
@@ -170,7 +193,8 @@
   .bottom-nav .item.active{color:var(--primary);font-weight:700;}
   .nav-ic{font-size:17px;}
 
-  .link-card{background:#fff;border-radius:17px;padding:15px;display:flex;align-items:center;gap:12px;}
+  .link-card{background:#fff;border-radius:17px;padding:15px;display:flex;align-items:center;gap:12px;cursor:pointer;}
+  .link-card:active{transform:scale(.985);}
   .link-card .lg{width:40px;height:40px;border-radius:12px;background:var(--primary-grad);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:15px;flex:0 0 auto;}
   .link-card .t{font-size:13.5px;font-weight:700;}
   .link-card .d{font-size:11.5px;color:var(--text-secondary);}
@@ -179,105 +203,61 @@
   .demo-box{border:1.5px dashed #C9C6F0;border-radius:14px;padding:12px 13px;background:#FBFAFF;}
   .demo-box .lab{font-size:10.5px;font-weight:700;color:#8A82D8;text-transform:uppercase;letter-spacing:.03em;margin-bottom:8px;}
 
-  .foot-note{max-width:390px;text-align:center;font-size:11px;color:#8A8A99;margin-top:18px;line-height:1.6;}
+  .num-list{display:flex;flex-direction:column;gap:8px;}
+  .num-list .ni{display:flex;gap:9px;align-items:flex-start;font-size:12px;line-height:1.5;color:#3f3f49;}
+  .num-list .nb{width:19px;height:19px;border-radius:50%;background:var(--chip-bg);color:var(--primary);font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 auto;margin-top:1px;}
 
-  /* === Responsive / fullscreen presentation === */
-  @media (min-width: 700px){
-    html,body{width:100%;height:100%;overflow:hidden;}
-    body{
-      padding:0;
-      display:block;
-      background:var(--bg-app);
-    }
-    .page-header,.toolbar,.foot-note{display:none;}
-    .device{
-      width:100vw;
-      max-width:none;
-      height:100vh;
-      min-height:100vh;
-      border-radius:0;
-      box-shadow:none;
-      margin:0;
-    }
-    .notch{display:none;}
-    .status-bar{
-      max-width:680px;
-      width:100%;
-      margin:0 auto;
-      padding-top:18px;
-    }
-    #appHeader,#appBody,#appFooter,#bottomNav{
-      width:100%;
-      max-width:680px;
-      margin-left:auto;
-      margin-right:auto;
-    }
-    .app-body{padding-left:22px;padding-right:22px;}
-    .app-footer{padding-left:22px;padding-right:22px;padding-bottom:18px;}
-    .app-header{padding-left:22px;padding-right:22px;}
-    .bottom-nav{padding-bottom:14px;}
-    .fullscreen-btn{display:flex;}
-  }
-  @media (max-width: 699px){
-    .fullscreen-btn{display:none;}
-  }
-  .fullscreen-btn{
-    position:fixed;
-    top:14px;
-    right:18px;
-    z-index:100;
-    align-items:center;
-    gap:6px;
-    border:1px solid var(--border);
-    background:rgba(255,255,255,.92);
-    backdrop-filter:blur(8px);
-    color:var(--primary);
-    border-radius:10px;
-    padding:8px 11px;
-    font:600 12px -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
-    cursor:pointer;
-    box-shadow:0 4px 14px rgba(30,30,60,.10);
-  }
-  .fullscreen-btn:active{transform:scale(.96);}
-  @media (min-width: 1200px){
-    #appHeader,#appBody,#appFooter,#bottomNav,.status-bar{max-width:720px;}
-    .app-body{padding-left:26px;padding-right:26px;}
-    .app-footer{padding-left:26px;padding-right:26px;}
-    .app-header{padding-left:26px;padding-right:26px;}
-  }
+  .checklist-row{display:flex;gap:12px;align-items:flex-start;background:#fff;border-radius:15px;padding:13px 14px;}
+  .checklist-row.clickable{cursor:pointer;}
+  .checklist-row.clickable:active{transform:scale(.985);}
+  .checklist-row.disabled{opacity:.5;}
+  .cl-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex:0 0 auto;margin-top:1px;}
+  .cl-icon.done{background:var(--success);color:#fff;}
+  .cl-icon.now{background:var(--primary);color:#fff;box-shadow:0 0 0 4px #EEEDFB;}
+  .cl-icon.todo{background:#E7E6EF;color:#9797A5;}
+  .cl-t{font-size:13.5px;font-weight:700;}
+  .cl-d{font-size:11.5px;color:var(--text-secondary);margin-top:2px;line-height:1.4;}
+  .cl-chip{display:inline-block;font-size:10px;font-weight:800;padding:2px 8px;border-radius:8px;margin-top:6px;}
+  .cl-chip.now{background:var(--chip-bg);color:var(--primary);}
 
+  .foot-note{max-width:520px;text-align:center;font-size:10.5px;color:#8A8A99;margin-top:6px;line-height:1.45;flex:0 0 auto;}
+  @media (max-width:480px){
+    body{overflow-y:auto;height:auto;min-height:100vh;}
+    .device-wrap{min-height:640px;}
+  }
 </style>
 </head>
 <body>
 
-<button class="fullscreen-btn" id="fullscreenBtn" onclick="toggleFullscreen()">⛶ На весь экран</button>
-
 <div class="page-header">
   <div class="eyebrow">Стань предпринимателем · UP Online</div>
   <h1>Кликабельный прототип альтернативного сценария</h1>
-  <p>Проходите путь клиента экран за экраном: выбирайте форму бизнеса, повторяйте проверку названия, переключайте способ получения ЭЦП. Внизу — демо-переключатели там, где результат в реальности приходит извне (ответ ЕГР).</p>
+  <p>Проходите путь клиента экран за экраном. Проверка уникальности названия ООО выполняется вручную на сайте ЕГР — в приложении такой API недоступен. На каждом шаге добавлены подсказки 💡. Полный чеклист этапов — кнопкой сверху.</p>
 </div>
 
 <div class="toolbar">
   <div class="crumb"><span id="crumbStage">—</span><span id="crumbTitle" style="font-size:12.5px;color:#16161D;font-weight:700;text-transform:none;letter-spacing:0;">—</span></div>
   <div class="actions">
+    <button class="tb-btn ghost2" onclick="app.openChecklist()">📋 Чеклист</button>
     <button class="tb-btn" onclick="app.restart()">↺ Сначала</button>
   </div>
 </div>
 
-<div class="device">
-  <div class="notch"></div>
-  <div class="status-bar">
-    <span>9:41</span>
-    <div class="status-icons"><div class="bars"><i></i><i></i><i></i><i></i></div><div class="wifi"></div><div class="battery"><div class="battery-fill"></div></div></div>
+<div class="device-wrap" id="deviceWrap">
+  <div class="device" id="deviceEl">
+    <div class="notch"></div>
+    <div class="status-bar">
+      <span>9:41</span>
+      <div class="status-icons"><div class="bars"><i></i><i></i><i></i><i></i></div><div class="wifi"></div><div class="battery"><div class="battery-fill"></div></div></div>
+    </div>
+    <div id="appHeader"></div>
+    <div id="appBody" class="app-body"></div>
+    <div id="appFooter" class="app-footer"></div>
+    <div id="bottomNav"></div>
   </div>
-  <div id="appHeader"></div>
-  <div id="appBody" class="app-body"></div>
-  <div id="appFooter" class="app-footer"></div>
-  <div id="bottomNav"></div>
 </div>
 
-<div class="foot-note">Прототип отражает шаги документа «Шаги альтернативного сценария текстом». Действия вроде проверки уникальности названия и решения о регистрации симулируются на клиенте — в реальном приложении часть из них приходит от ЕГР или УОС.</div>
+<div class="foot-note">Прототип отражает шаги документа «Шаги альтернативного сценария текстом». Проверка названия и решение о регистрации — самоотчёт клиента: банк технически не может подтвердить эти действия сам.</div>
 
 <script>
 const state = {
@@ -290,10 +270,43 @@ const state = {
 };
 let current = 's1';
 let hist = [];
+let progressRef = 's1';
+
+const MACRO = {
+  s1:1, s2:1, s3:1,
+  s4a:2, s5b:2, s5b_check:2, s5b_free:2, s5b_busy:2, s7b:2, s8b:2,
+  s9:3, s10a:3, s11:3,
+  s12:4, s13:4,
+  s14:5,
+  s15a:6, s15b:6, s15c:6,
+  s16:7
+};
+const MACRO_LABELS = [
+  {n:1, t:'Анкета', d:'Выбор формы бизнеса, данные профиля, коды ОКЭД'},
+  {n:2, t:'Название и документы', d:'ИП — автозаявление. ООО — название (проверка на сайте ЕГР вручную) и конструктор документов'},
+  {n:3, t:'Электронная подпись', d:'Заказ ЭЦП через банк или самостоятельно, получение ключа'},
+  {n:4, t:'Вычитка и подача', d:'Проверка документов, скачивание, самостоятельная подача в ЕГР'},
+  {n:5, t:'Ожидание регистрации', d:'ЕГР рассматривает документы'},
+  {n:6, t:'Результат регистрации', d:'Открытие счёта (ИП — автоматически, ООО — по обращению) или уточнение статуса'},
+  {n:7, t:'Переход в бизнес-интерфейс', d:'SSO-переход в бизнес-контур банка'},
+];
+
+function repScreen(macro){
+  switch(macro){
+    case 1: return 's1';
+    case 2: return state.entity==='ip' ? 's4a' : 's5b';
+    case 3: return 's9';
+    case 4: return 's12';
+    case 5: return 's14';
+    case 6: return state.entity==='ip' ? 's15a' : 's15b';
+    case 7: return 's16';
+  }
+}
 
 function go(id, opts){
   opts = opts || {};
   if(!opts.replace){ hist.push(current); }
+  if(id!=='checklist'){ progressRef = id; }
   current = id;
   render();
 }
@@ -304,7 +317,7 @@ function back(){
 }
 function restart(){
   state.entity='ip'; state.nameAttempts=0; state.sig=null; state.docsChecked=false; state.submitted=false;
-  hist=[]; current='s1'; render();
+  hist=[]; current='s1'; progressRef='s1'; render();
 }
 function selectEntity(v){ state.entity=v; render(); }
 function selectSig(v){ state.sig=v; render(); }
@@ -315,22 +328,23 @@ function generateName(){
   state.companyName = opts[(i+1)%opts.length];
   render();
 }
-function checkName(){
-  state.nameAttempts++;
-  if(state.nameAttempts===1){ go('s6b_busy'); }
-  else { go('s6b_ok'); }
+function openEgrSite(){
+  alert('В реальном приложении откроется официальный сайт ЕГР (egr.gov.by) в новой вкладке или встроенном браузере — проверка выполняется на стороне ЕГР, банк не имеет к ней прямого API-доступа.');
 }
+function markNameFree(){ go('s5b_free'); }
+function markNameBusy(){ state.nameAttempts++; go('s5b_busy'); }
+function openChecklist(){ go('checklist'); }
 
-const app = {go, back, restart, selectEntity, selectSig, toggle, generateName, checkName};
+const app = {go, back, restart, selectEntity, selectSig, toggle, generateName, checkName:null, openEgrSite, markNameFree, markNameBusy, openChecklist};
 
-function icon(kind){ return kind; }
-
-function statusBar(){ /* included statically in shell */ }
+function tip(html){
+  return `<div class="tip-card"><span class="ic">💡</span><div>${html}</div></div>`;
+}
 
 const SCREENS = {
 
   s1: ()=>({
-    stage:'Этап 1', title:'Стань предпринимателем', back:false, nav:false,
+    stage:'Этап 1', title:'Стань предпринимателем', back:false,
     body:`
       <div class="banner info"><span class="ic">ⓘ</span>Зарегистрируйте бизнес и откройте счёт, не выходя из приложения</div>
       <div class="section-title">Выберите форму бизнеса</div>
@@ -343,6 +357,7 @@ const SCREENS = {
         <div><div class="t">Общество с ограниченной ответственностью (ООО)</div><div class="d">Потребуется название компании и пакет учредительных документов</div></div>
       </div>
       <div class="hint">💬 Не знаете, что выбрать? Сравнить формы</div>
+      ${tip('<b>Совет:</b> ИП оформляется быстрее и дешевле, но предприниматель отвечает по обязательствам всем своим имуществом. ООО ограничивает ответственность размером уставного капитала.')}
     `,
     footer:`<div class="btn-primary" onclick="app.go('s2')">Продолжить</div>`
   }),
@@ -358,6 +373,7 @@ const SCREENS = {
       <div class="section-title">Контакты</div>
       <div class="field"><label>Адрес регистрации</label><div class="value">г. Минск, ул. Немига, 5</div></div>
       <div class="hint">💬 Зачем нужны эти данные?</div>
+      ${tip('<b>Совет:</b> сверьте паспортные данные с оригиналом документа — расхождения могут задержать регистрацию в ЕГР.')}
     `,
     footer:`<div class="btn-primary" onclick="app.go('s3')">Продолжить</div>`
   }),
@@ -370,6 +386,7 @@ const SCREENS = {
       <div class="chip-row"><div class="chip">62.01 — разработка ПО ✕</div><div class="chip">62.02 — консультации ✕</div></div>
       <div class="card"><div class="hint" style="margin-bottom:6px;">ⓘ Что такое ОКЭД?</div><div style="font-size:12px;color:#6b6b78;line-height:1.5;">Классификатор видов экономической деятельности. Укажите все виды, которыми планируете заниматься.</div></div>
       <div class="card"><div class="hint" style="margin-bottom:6px;">💬 Пример заполнения</div><div style="font-size:12px;color:#6b6b78;line-height:1.5;">Посмотреть, какие коды обычно выбирают для похожего бизнеса</div></div>
+      ${tip('<b>Совет:</b> выбирайте только те коды, которыми планируете заниматься в ближайший год — добавить новые можно будет позже через бизнес-профиль.')}
     `,
     footer:`<div class="btn-primary" onclick="app.go(state.entity==='ip' ? 's4a' : 's5b')">Продолжить</div>`
   }),
@@ -377,12 +394,13 @@ const SCREENS = {
   s4a: ()=>({
     stage:'Этап 2 · ИП', title:'Заявление ИП',
     body:`
-      <div class="center-block" style="padding-top:24px;">
+      <div class="center-block" style="padding-top:14px;">
         <div class="status-icon ok">✓</div>
         <div class="center-title">Заявление сформировано</div>
         <div class="center-text">Название юрлица и конструктор документов для ИП не требуются — заявление подготовлено автоматически на основании анкеты</div>
       </div>
       <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Заявление о регистрации ИП</div><div class="sz">PDF · сформировано только что</div></div><div class="chev">›</div></div>
+      ${tip('<b>Совет:</b> внимательно проверьте адрес регистрации в заявлении — именно на него ЕГР направит уведомление о результате.')}
     `,
     footer:`<div class="btn-primary" onclick="app.go('s9')">Перейти к электронной подписи</div>`
   }),
@@ -390,35 +408,60 @@ const SCREENS = {
   s5b: ()=>({
     stage:'Этап 2 · ООО', title:'Название компании',
     body:`
+      <div class="banner warning"><span class="ic">⚠</span>Автоматическая проверка через ЕГР приложению недоступна — уникальность нужно проверить вручную на сайте ЕГР</div>
       <div class="field"><label>Название ООО</label><div class="value">${state.companyName}</div></div>
       <div class="btn-secondary" style="margin-top:0;" onclick="app.generateName()">✨ Сгенерировать вариант названия</div>
       <div class="card"><div class="hint" style="margin-bottom:6px;">ⓘ Требования к наименованию</div><div style="font-size:12px;color:#6b6b78;line-height:1.5;">Название не должно совпадать с уже зарегистрированными и содержать запрещённые слова.</div></div>
-      ${state.nameAttempts>0? `<div class="banner warning"><span class="ic">⚠</span>Попыток проверки: ${state.nameAttempts}. Нажмите «Проверить уникальность» ещё раз.</div>`:''}
+      ${state.nameAttempts>0? `<div class="banner danger"><span class="ic">✕</span>Предыдущий вариант оказался занят (попыток: ${state.nameAttempts}). Измените название или сгенерируйте новое и проверьте снова.</div>`:''}
+      ${tip('<b>Совет:</b> вариант можно сгенерировать в приложении, но занятость обязательно проверьте сами на сайте ЕГР — банк не имеет доступа к этой проверке через API.')}
     `,
-    footer:`<div class="btn-primary" onclick="app.checkName()">Проверить уникальность</div>`
+    footer:`<div class="btn-primary" onclick="app.go('s5b_check')">Далее: проверить на сайте ЕГР</div>`
   }),
 
-  s6b_ok: ()=>({
+  s5b_check: ()=>({
+    stage:'Этап 2 · ООО', title:'Проверка на сайте ЕГР',
+    body:`
+      <div class="banner warning"><span class="ic">⚠</span>У банка нет прямого доступа к API ЕГР для автоматической проверки. Проверьте название самостоятельно на официальном сайте регистра</div>
+      <div class="link-card" onclick="app.openEgrSite()"><div class="lg">↗</div><div><div class="t">Открыть сайт ЕГР</div><div class="d">egr.gov.by · проверка наименований</div></div></div>
+      <div class="section-title">Как проверить</div>
+      <div class="num-list">
+        <div class="ni"><div class="nb">1</div>Введите «${state.companyName}» в поиск на сайте ЕГР</div>
+        <div class="ni"><div class="nb">2</div>Проверьте, нет ли точных или похожих совпадений</div>
+        <div class="ni"><div class="nb">3</div>Вернитесь в приложение и укажите результат ниже</div>
+      </div>
+      <div class="section-title">Результат проверки</div>
+      ${tip('<b>Совет:</b> используйте на сайте ЕГР точную форму названия, включая организационно-правовую форму — «ООО» и без неё могут дать разные результаты поиска.')}
+    `,
+    footer:`
+      <div class="btn-pair">
+        <div class="btn-secondary" style="border-color:#1FAA59;color:#1FAA59;" onclick="app.markNameFree()">✅ Свободно</div>
+        <div class="btn-secondary" style="border-color:#D93025;color:#D93025;" onclick="app.markNameBusy()">❌ Занято</div>
+      </div>`
+  }),
+
+  s5b_free: ()=>({
     stage:'Этап 2 · ООО', title:'Проверка названия',
     body:`
-      <div class="center-block" style="padding-top:22px;">
+      <div class="center-block" style="padding-top:20px;">
         <div class="status-icon ok">✓</div>
-        <div class="center-title">«${state.companyName}» — свободно</div>
-        <div class="center-text">Проверено через справочный API ЕГР. Название можно использовать для регистрации ООО</div>
+        <div class="center-title">Отмечено: «${state.companyName}» свободно</div>
+        <div class="center-text">Вы подтвердили, что проверили название на сайте ЕГР и совпадений не найдено</div>
       </div>
-      <div class="card"><div class="field-row"><div class="d" style="font-size:12px;color:#6b6b78;">Проверка выполнена</div><div style="font-size:12px;font-weight:700;color:#1FAA59;">только что</div></div></div>
+      <div class="banner info"><span class="ic">ⓘ</span>Это самоотчёт — банк не может перепроверить результат автоматически</div>
+      ${tip('<b>Совет:</b> сохраните проверенное название — при заполнении устава оно должно совпадать посимвольно, включая форму «ООО».')}
     `,
-    footer:`<div class="btn-primary" onclick="app.go('s7b')">Продолжить</div>`
+    footer:`<div class="btn-primary" onclick="app.go('s7b')">Продолжить к документам</div>`
   }),
 
-  s6b_busy: ()=>({
+  s5b_busy: ()=>({
     stage:'Этап 2 · ООО', title:'Проверка названия',
     body:`
-      <div class="center-block" style="padding-top:22px;">
+      <div class="center-block" style="padding-top:20px;">
         <div class="status-icon warn">!</div>
-        <div class="center-title">«${state.companyName}» уже занято</div>
-        <div class="center-text">Такое название уже зарегистрировано в ЕГР. Измените название или сгенерируйте новый вариант и проверьте снова</div>
+        <div class="center-title">Отмечено: название занято</div>
+        <div class="center-text">Вы указали, что на сайте ЕГР нашлось совпадение. Измените название или сгенерируйте новый вариант и проверьте его снова</div>
       </div>
+      ${tip('<b>Совет:</b> попробуйте добавить уточняющее слово или регион к названию — это часто помогает быстро найти свободный вариант.')}
     `,
     footer:`
       <div class="btn-primary" onclick="app.go('s5b')">Изменить название</div>
@@ -436,6 +479,7 @@ const SCREENS = {
       <div class="doc-row"><div class="icon">💰</div><div style="flex:1"><div class="name">Уставный капитал</div><div class="sz">заполнено</div></div><div class="chev">✓</div></div>
       <div class="doc-row"><div class="icon">⚙️</div><div style="flex:1"><div class="name">Вид деятельности</div><div class="sz">заполнено</div></div><div class="chev">✓</div></div>
       <div class="hint">ⓘ Подсказки по каждому полю доступны по значку рядом</div>
+      ${tip('<b>Совет:</b> уставный капитал можно внести не только деньгами, но и имуществом — уточните детали в разделе «Уставный капитал».')}
     `,
     footer:`<div class="btn-primary" onclick="app.go('s8b')">Сформировать пакет документов</div>`
   }),
@@ -449,6 +493,7 @@ const SCREENS = {
       <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Приказ о назначении директора</div><div class="sz">PDF</div></div><div class="chev">›</div></div>
       <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Договор (контракт) с директором</div><div class="sz">PDF</div></div><div class="chev">›</div></div>
       <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Учётная политика</div><div class="sz">PDF</div></div><div class="chev">›</div></div>
+      ${tip('<b>Совет:</b> дайте документы на проверку юристу или бухгалтеру перед подачей, особенно устав и порядок распределения долей.')}
     `,
     footer:`<div class="btn-primary" onclick="app.go('s9')">Продолжить</div>`
   }),
@@ -466,6 +511,7 @@ const SCREENS = {
         <div><div class="t">У меня уже есть ЭЦП / оформлю сам</div><div class="d">Действуете самостоятельно, без участия банка в оформлении подписи</div></div>
       </div>
       ${!state.sig? `<div class="hint">👆 Выберите один из вариантов</div>`:''}
+      ${tip('<b>Совет:</b> оформление через банк обычно быстрее по очереди в РЦ, но личный визит требуется в любом случае — это общее требование законодательства, а не банка.')}
     `,
     footer:`<div class="btn-primary ${!state.sig?'off':''}" onclick="app.go(state.sig==='bank' ? 's10a' : 's12')">Продолжить</div>`
   }),
@@ -480,6 +526,7 @@ const SCREENS = {
         <div class="st"><div class="line"><div class="dot todo">3</div></div><div class="txt"><div class="tt">Подтвердите личность и получите ключ ЭЦП</div><div class="ts">Очно, по паспорту</div></div></div>
       </div>
       <div class="banner warning"><span class="ic">⚠</span>Сертификат издаёт РЦ ГосСУОК/НЦЭУ. Банк выступает только точкой обслуживания</div>
+      ${tip('<b>Совет:</b> возьмите с собой паспорт и, если документы подаёт представитель, — нотариально заверенную доверенность.')}
     `,
     footer:`<div class="btn-secondary" style="margin-top:0;" onclick="app.go('s11')">Отметить: ЭЦП получена</div>`
   }),
@@ -487,12 +534,13 @@ const SCREENS = {
   s11: ()=>({
     stage:'Этап 3 · Вариант А', title:'Электронная подпись',
     body:`
-      <div class="center-block" style="padding-top:16px;">
+      <div class="center-block" style="padding-top:10px;">
         <div class="status-icon ok">✓</div>
         <div class="center-title">ЭЦП получена</div>
         <div class="center-text">Отлично! Теперь вы можете подписать документы электронно при самостоятельной подаче в ЕГР</div>
       </div>
       <div class="toggle-row"><div class="l">Я получил(а) ключ ЭЦП в точке РЦ банка</div><div class="toggle on"><div class="knob"></div></div></div>
+      ${tip('<b>Совет:</b> храните ключ ЭЦП в надёжном месте — банк не сможет восстановить его при утере, повторное получение потребует нового визита в РЦ.')}
     `,
     footer:`<div class="btn-primary" onclick="app.go('s12')">Продолжить к подаче документов</div>`
   }),
@@ -506,6 +554,7 @@ const SCREENS = {
       <div class="doc-row"><div class="icon">📄</div><div style="flex:1"><div class="name">Приказ о назначении директора</div><div class="sz">Открыть для проверки</div></div><div class="chev">›</div></div>` : ``}
       <div class="toggle-row" onclick="app.toggle('docsChecked')"><div class="l">Я проверил(а) все документы — данные верны</div><div class="toggle ${state.docsChecked?'on':''}"><div class="knob"></div></div></div>
       ${!state.docsChecked? `<div class="hint">👆 Отметьте, что документы проверены</div>`:''}
+      ${tip('<b>Совет:</b> обратите особое внимание на паспортные данные учредителей и размер долей — это самые частые причины отказа в регистрации.')}
     `,
     footer:`<div class="btn-primary ${!state.docsChecked?'off':''}" onclick="app.go('s13')">Скачать пакет документов</div>`
   }),
@@ -520,6 +569,7 @@ const SCREENS = {
       </div>
       <div class="toggle-row" onclick="app.toggle('submitted')"><div class="l">Я подал(а) документы на регистрацию</div><div class="toggle ${state.submitted?'on':''}"><div class="knob"></div></div></div>
       <div class="banner warning"><span class="ic">⚠</span>Банк не может технически подтвердить факт подачи и её корректность — это самоотчёт клиента</div>
+      ${tip('<b>Совет:</b> сохраните подтверждение подачи (расписку или электронную квитанцию ЕГР) — оно пригодится, если потребуется уточнить статус.')}
     `,
     footer:`<div class="btn-primary ${!state.submitted?'off':''}" onclick="app.go('s14')">Подтвердить подачу</div>`
   }),
@@ -535,6 +585,7 @@ const SCREENS = {
         <div class="st"><div class="line"><div class="dot todo">5</div></div><div class="txt"><div class="tt">Регистрация и счёт</div><div class="ts">ожидает результата</div></div></div>
       </div>
       <div class="banner info"><span class="ic">ⓘ</span>Мы уведомим вас, как только появится результат из ЕГР</div>
+      ${tip('<b>Совет:</b> срок рассмотрения обычно не превышает нескольких рабочих дней, но может увеличиться при необходимости уточнений со стороны ЕГР.')}
       <div class="demo-box">
         <div class="lab">Демо · ответ поступает от ЕГР</div>
         <div class="btn-pair">
@@ -549,7 +600,7 @@ const SCREENS = {
   s15a: ()=>({
     stage:'Этап 5 · ИП', title:'Регистрация завершена',
     body:`
-      <div class="center-block" style="padding-top:12px;">
+      <div class="center-block" style="padding-top:6px;">
         <div class="status-icon ok">🎉</div>
         <div class="center-title">ИП зарегистрировано!</div>
         <div class="center-text">Сведения о регистрации получены из ЕГР. Расчётный счёт открыт автоматически</div>
@@ -559,6 +610,7 @@ const SCREENS = {
         <div class="value" style="font-size:16px;font-weight:700;margin-top:4px;">BY00 UP24 0000 0000 0001</div>
         <div class="sz" style="color:#8A8A99;font-size:11.5px;margin-top:2px;">Открыт в АБС после проверки УОС (идентификация, ПОД/ФТ)</div>
       </div>
+      ${tip('<b>Совет:</b> подключите SMS- или push-уведомления по счёту — это поможет не пропустить первые операции и настройки безопасности.')}
     `,
     footer:`<div class="btn-primary" onclick="app.go('s16')">Перейти в бизнес-интерфейс</div>`
   }),
@@ -566,13 +618,14 @@ const SCREENS = {
   s15b: ()=>({
     stage:'Этап 5 · ООО', title:'Регистрация завершена',
     body:`
-      <div class="center-block" style="padding-top:12px;">
+      <div class="center-block" style="padding-top:6px;">
         <div class="status-icon ok">🎉</div>
         <div class="center-title">ООО зарегистрировано!</div>
         <div class="center-text">Сведения о регистрации получены из ЕГР</div>
       </div>
       <div class="banner warning"><span class="ic">⚠</span>Автоматическое открытие счёта для ООО недоступно — потребуется отдельное обращение</div>
       <div class="link-card"><div class="lg">i</div><div><div class="t">Как открыть расчётный счёт</div><div class="d">Пошаговая инструкция и запись в отделение</div></div></div>
+      ${tip('<b>Совет:</b> запишитесь в отделение заранее — так вы быстрее откроете расчётный счёт и получите доступ к бизнес-интерфейсу.')}
     `,
     footer:`<div class="btn-primary" onclick="app.go('s16')">Перейти в бизнес-интерфейс</div>`
   }),
@@ -580,12 +633,13 @@ const SCREENS = {
   s15c: ()=>({
     stage:'Этап 5', title:'Статус заявки',
     body:`
-      <div class="center-block" style="padding-top:12px;">
+      <div class="center-block" style="padding-top:6px;">
         <div class="status-icon warn">?</div>
         <div class="center-title">Сведения ещё не поступили</div>
         <div class="center-text">Официальное уведомление от ЕГР пока не пришло в банк. Уточните статус регистрации самостоятельно</div>
       </div>
       <div class="doc-row" onclick="app.go('s14')"><div class="icon">🔄</div><div style="flex:1"><div class="name">Проверить статус в ЕГР</div><div class="sz">фоновая проверка через справочный API</div></div><div class="chev">›</div></div>
+      ${tip('<b>Совет:</b> если сведения не появляются больше 10 рабочих дней, стоит уточнить статус напрямую в регистрирующем органе.')}
     `,
     footer:`
       <div class="btn-primary" onclick="app.go('s14')">Проверить снова</div>
@@ -601,29 +655,45 @@ const SCREENS = {
         <div class="center-title">Переходим в бизнес-профиль</div>
         <div class="center-text">Выполняется переход по SSO между розничным и бизнес-контуром банка</div>
       </div>
+      ${tip('<b>Совет:</b> в бизнес-интерфейсе доступны отдельные настройки доступа — при необходимости добавьте сотрудников с ограниченными правами.')}
     `,
     footer:`<div class="btn-secondary" style="margin-top:0;" onclick="app.restart()">↺ Пройти путь заново</div>`
   }),
+
+  checklist: ()=>{
+    const curMacro = MACRO[progressRef] || 1;
+    const rows = MACRO_LABELS.map(m=>{
+      const st = m.n < curMacro ? 'done' : (m.n===curMacro ? 'now' : 'todo');
+      const clickable = m.n <= curMacro;
+      const iconTxt = st==='done' ? '✓' : String(m.n);
+      return `<div class="checklist-row ${clickable?'clickable':'disabled'}" ${clickable?`onclick="app.go('${repScreen(m.n)}')"`:''}>
+        <div class="cl-icon ${st}">${iconTxt}</div>
+        <div>
+          <div class="cl-t">${m.t}</div>
+          <div class="cl-d">${m.d}</div>
+          ${st==='now'?'<span class="cl-chip now">Сейчас здесь</span>':''}
+        </div>
+      </div>`;
+    }).join('');
+    return {
+      stage:'Обзор', title:'Чеклист регистрации',
+      body:`
+        <div class="chip-row">
+          <div class="chip">${state.entity==='ip'?'Форма: ИП':'Форма: ООО'}</div>
+          ${state.sig? `<div class="chip">${state.sig==='bank'?'ЭЦП: через банк':'ЭЦП: самостоятельно'}</div>`:''}
+        </div>
+        ${rows}
+        ${tip('Пройденные и текущий этап доступны для перехода нажатием. Следующие этапы откроются по мере прохождения пути.')}
+      `,
+      footer:`<div class="btn-secondary" style="margin-top:0;" onclick="app.back()">Закрыть</div>`
+    };
+  },
 };
-
-function toggleFullscreen(){
-  const el = document.documentElement;
-  if (!document.fullscreenElement) {
-    if (el.requestFullscreen) el.requestFullscreen();
-  } else if (document.exitFullscreen) {
-    document.exitFullscreen();
-  }
-}
-
-document.addEventListener('fullscreenchange', () => {
-  const b = document.getElementById('fullscreenBtn');
-  if (b) b.textContent = document.fullscreenElement ? '⛶ Выйти из полного экрана' : '⛶ На весь экран';
-});
 
 function render(){
   const s = SCREENS[current]();
   document.getElementById('crumbStage').textContent = s.stage;
-  document.getElementById('crumbTitle').textContent = (s.title || 'Бизнес-интерфейс') + (state.entity ? '' : '');
+  document.getElementById('crumbTitle').textContent = s.title || 'Бизнес-интерфейс';
 
   const headerEl = document.getElementById('appHeader');
   if(s.title !== undefined && !s.noHeaderTitle){
@@ -657,6 +727,22 @@ function render(){
 }
 
 render();
+
+function fitDevice(){
+  const wrap = document.getElementById('deviceWrap');
+  const el = document.getElementById('deviceEl');
+  if(!wrap || !el) return;
+  const availH = wrap.clientHeight;
+  const availW = wrap.clientWidth;
+  const natW = 390, natH = 820;
+  const scale = Math.min(1, availH/natH, availW/natW);
+  el.style.transform = `scale(${scale})`;
+}
+window.addEventListener('resize', fitDevice);
+window.addEventListener('orientationchange', fitDevice);
+window.addEventListener('load', fitDevice);
+fitDevice();
+setTimeout(fitDevice, 60);
 </script>
 </body>
 </html>
